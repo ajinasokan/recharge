@@ -1,0 +1,12 @@
+name: recharge
+description: Recharge is a simple library to hot reload your Dart code on file changes
+version: 0.0.1
+author: Ajin Asokan <ajin.panthayil@gmail.com>
+homepage: https://github.com/ajinasokan/recharge
+
+dependencies:
+  watcher: ^0.9.7+13
+  vm_service: ^2.1.4
+
+environment:
+  sdk: '>=2.0.0 <3.0.0'
