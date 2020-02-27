@@ -1,10 +1,22 @@
 # Recharge
 
-Recharge is a simple library to hot reload your Dart code on file changes. This is useful when you are building Dart CLIs or API services. It utilises Dart VM's hot reloading and incremental build capabilities through [vm_service](https://pub.dev/packages/vm_service) library. To use Recharge check out following examples and run your code like this:
+Recharge is a simple library to hot reload your Dart code on file changes. This is useful when you are building Dart CLIs or API services. It utilises Dart VM's hot reloading and incremental build capabilities through [vm_service](https://pub.dev/packages/vm_service) library. To use Recharge add it to your `dev_dependencies`:
+
+```yaml
+...
+
+dev_dependencies:
+  recharge:
+
+...
+```
+
+Check out following examples and run your code like this:
 
 ```shell
 dart --enable-vm-service main.dart
 ```
+
 
 ## Hello world
 
