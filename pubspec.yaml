@@ -5,7 +5,7 @@ author: Ajin Asokan <ajin.panthayil@gmail.com>
 homepage: https://github.com/ajinasokan/recharge
 
 dependencies:
-  watcher: ^0.9.7+13
+  watcher: ^1.0.0
   vm_service: ^2.1.4
 
 environment:
