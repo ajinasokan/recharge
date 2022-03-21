@@ -6,7 +6,7 @@ homepage: https://github.com/ajinasokan/recharge
 
 dependencies:
   watcher: ^1.0.0
-  vm_service: ^2.1.4
+  vm_service: ^8.2.2
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: ">=2.0.0 <3.0.0"
