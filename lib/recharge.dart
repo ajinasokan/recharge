@@ -10,13 +10,13 @@ import 'package:watcher/watcher.dart';
 // callback.
 class Recharge {
   final String path;
-  final void Function() onReload;
+  final void Function()? onReload;
 
-  String _mainIsolate;
-  VmService _service;
-  DirectoryWatcher _watcher;
+  String? _mainIsolate;
+  VmService? _service;
+  late DirectoryWatcher _watcher;
 
-  Recharge({this.path, this.onReload}) {
+  Recharge({required this.path, this.onReload}) {
     assert(path != null, "Path cannot be null");
 
     // This instance of watcher is going to be alive
@@ -49,10 +49,10 @@ class Recharge {
     _service = await vms.vmServiceConnectUri(wsUri.toString());
 
     // Get currently running VM
-    final vm = await _service.getVM();
+    final vm = await _service!.getVM();
 
     // Fetch main isolate's id
-    _mainIsolate = vm.isolates.first.id;
+    _mainIsolate = vm.isolates!.first.id;
   }
 
   // Reloads the main isolate and return whether it was successful or not
@@ -62,20 +62,20 @@ class Recharge {
     }
     // Reload main isolate. This only reloads the code. Nothing is executed
     // or no data is modified after this.
-    final res = await _service.reloadSources(_mainIsolate);
+    final res = await _service!.reloadSources(_mainIsolate!);
 
     // Log the result of reload. If it was a failure print the message
     // from reload report. This map is not documented. It may change I guess.
     // Hence inside a try catch.
-    if (res.success) {
+    if (res.success!) {
       print("Reload success");
     } else {
       print("Reload failed");
       try {
-        print(res.json["notices"][0]["message"]);
+        print(res.json!["notices"][0]["message"]);
       } catch (e) {}
     }
 
-    return res.success;
+    return res.success!;
   }
 }
