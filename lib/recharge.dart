@@ -17,8 +17,6 @@ class Recharge {
   late DirectoryWatcher _watcher;
 
   Recharge({required this.path, this.onReload}) {
-    assert(path != null, "Path cannot be null");
-
     // This instance of watcher is going to be alive
     // throughout the execution
     _watcher = DirectoryWatcher(path);
