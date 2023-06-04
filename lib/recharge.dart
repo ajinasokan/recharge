@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+import 'dart:io';
 // import 'dart:js_interop'; //unused import
 import 'package:vm_service/vm_service.dart' show VmService;
 import 'package:vm_service/vm_service_io.dart' as vms;
@@ -13,19 +14,26 @@ class Recharge {
   final String path;
   final void Function()? onReload;
   int delay;
+  bool clearConsole;
 
   String? _mainIsolate;
   VmService? _service;
   late DirectoryWatcher _watcher;
   Timer? _timer;
 
-  Recharge({required this.path, this.onReload, int delay = 200})
-      : delay = delay {
+  Recharge(
+      {required this.path,
+      this.onReload,
+      int delay = 200,
+      bool clearConsole = true})
+      : delay = delay,
+        clearConsole = clearConsole {
     // This instance of watcher is going to be alive
     // throughout the execution
     _watcher = DirectoryWatcher(path);
 
     // Start watching for file changes in the path
+    _clearConsole();
     print("Starting recharge..");
     _watcher.events.listen((event) async {
       var name = event.type.toString().toUpperCase();
@@ -33,7 +41,9 @@ class Recharge {
       print("$name $path");
       _timer?.cancel();
       _timer = Timer(Duration(milliseconds: this.delay), () async {
+        _clearConsole();
         await reload();
+
         onReload?.call();
       });
     });
@@ -85,5 +95,10 @@ class Recharge {
     }
 
     return res.success!;
+  }
+
+  // source https://stackoverflow.com/questions/21269769/clearing-the-terminal-screen-in-a-command-line-dart-app
+  _clearConsole() {
+    if (clearConsole) print("\x1B[2J\x1B[0;0H");
   }
 }
