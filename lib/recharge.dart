@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+// import 'dart:js_interop'; //unused import
 import 'package:vm_service/vm_service.dart' show VmService;
 import 'package:vm_service/vm_service_io.dart' as vms;
 import 'package:vm_service/utils.dart' as vmutils;
@@ -11,12 +12,15 @@ import 'package:watcher/watcher.dart';
 class Recharge {
   final String path;
   final void Function()? onReload;
+  int delay;
 
   String? _mainIsolate;
   VmService? _service;
   late DirectoryWatcher _watcher;
+  Timer? _timer;
 
-  Recharge({required this.path, this.onReload}) {
+  Recharge({required this.path, this.onReload, int delay = 200})
+      : delay = delay {
     // This instance of watcher is going to be alive
     // throughout the execution
     _watcher = DirectoryWatcher(path);
@@ -27,8 +31,11 @@ class Recharge {
       var name = event.type.toString().toUpperCase();
       var path = event.path;
       print("$name $path");
-      // Reload VM and fire onReload if it exists
-      if (await reload()) onReload?.call();
+      _timer?.cancel();
+      _timer = Timer(Duration(milliseconds: this.delay), () async {
+        await reload();
+        onReload?.call();
+      });
     });
   }
 
@@ -37,6 +44,9 @@ class Recharge {
   init() async {
     // Observatory URL is like: http://127.0.0.1:8181/u31D8b3VvmM=/
     // Websocket endpoint for that will be: ws://127.0.0.1:8181/reBbXy32L6g=/ws
+
+    // print("application reloaded")
+
     final serverUri = (await dev.Service.getInfo()).serverUri;
     if (serverUri == null) {
       throw Exception("No VM service. Run with --enable-vm-service");
